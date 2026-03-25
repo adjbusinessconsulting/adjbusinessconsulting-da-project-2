@@ -142,9 +142,7 @@ def dark_fig(fig):
 # SECTION: ABOUT ME
 # ════════════════════════════════════════════════
 if section == "👤 About Me":
-   col_bio = st.columns([1, 2.5])
-
-    with col_bio:
+   with col_bio:
         st.markdown("# Anthony Djiady Djie")
         st.markdown('<div style="color:#93C5FD;font-family:monospace;font-size:13px;margin-bottom:1rem;">Data Analyst · Tax Practitioner · Data Scientist (in training) · Palu, Indonesia</div>', unsafe_allow_html=True)
         st.markdown("""
