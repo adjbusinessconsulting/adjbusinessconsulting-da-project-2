@@ -142,49 +142,42 @@ def dark_fig(fig):
 # SECTION: ABOUT ME
 # ════════════════════════════════════════════════
 if section == "👤 About Me":
-    col_bio = st.columns(1)
-    with col_img:
-        st.markdown(f"""
-        <div style="text-align:center;padding-top:1rem;">
-            <img src="data:image/jpeg;base64,{PHOTO_B64}"
-                 style="width:220px;height:220px;border-radius:12px;object-fit:cover;object-position:top;border:3px solid #3B82F6;box-shadow:0 8px 32px rgba(59,130,246,0.2);"/>
-        </div>
-        """, unsafe_allow_html=True)
+    # --- Profile Header (No columns, full width) ---
+    st.markdown("# Anthony Djiady Djie")
+    st.markdown('<div style="color:#93C5FD;font-family:monospace;font-size:13px;margin-bottom:1rem;">Data Analyst · Tax Practitioner · Data Scientist (in training) · Palu, Indonesia</div>', unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class="info-card">
+    Data Analyst and Tax Practitioner with <strong style="color:white;">6+ years of experience</strong> supporting data analysis,
+    financial reporting, payroll, and tax compliance across multiple businesses.
+    Skilled in transforming financial and operational data into actionable insights through dashboards,
+    cash flow analysis, sales performance analysis, and payroll tax calculations including PPh 21.<br><br>
+    Currently enhancing analytical expertise through a <strong style="color:white;">Data Scientist bootcamp at Dibimbing.id (DS39+)</strong>,
+    with a career focus on analytics-driven finance, taxation, and business intelligence roles.
+    </div>
+    """, unsafe_allow_html=True)
 
-    with col_bio:
-        st.markdown("# Anthony Djiady Djie")
-        st.markdown('<div style="color:#93C5FD;font-family:monospace;font-size:13px;margin-bottom:1rem;">Data Analyst · Tax Practitioner · Data Scientist (in training) · Palu, Indonesia</div>', unsafe_allow_html=True)
+    # --- Skills & Certs (Keeping these in 2 columns as per your original design) ---
+    col_a, col_b = st.columns(2)
+    with col_a:
         st.markdown("""
         <div class="info-card">
-        Data Analyst and Tax Practitioner with <strong style="color:white;">6+ years of experience</strong> supporting data analysis,
-        financial reporting, payroll, and tax compliance across multiple businesses.
-        Skilled in transforming financial and operational data into actionable insights through dashboards,
-        cash flow analysis, sales performance analysis, and payroll tax calculations including PPh 21.<br><br>
-        Currently enhancing analytical expertise through a <strong style="color:white;">Data Scientist bootcamp at Dibimbing.id (DS39+)</strong>,
-        with a career focus on analytics-driven finance, taxation, and business intelligence roles.
+            <div style="color:#93C5FD;font-family:monospace;font-size:11px;margin-bottom:0.5rem;">// tools & skills</div>
+            <span class="tag">Python</span><span class="tag">SQL</span><span class="tag">Tableau</span>
+            <span class="tag">Power BI</span><span class="tag">Excel</span><span class="tag">Xero</span>
+            <span class="tag">Scikit-Learn</span><span class="tag">Pandas</span>
         </div>
         """, unsafe_allow_html=True)
-
-        col_a, col_b = st.columns(2)
-        with col_a:
-            st.markdown("""
-            <div class="info-card">
-                <div style="color:#93C5FD;font-family:monospace;font-size:11px;margin-bottom:0.5rem;">// tools & skills</div>
-                <span class="tag">Python</span><span class="tag">SQL</span><span class="tag">Tableau</span>
-                <span class="tag">Power BI</span><span class="tag">Excel</span><span class="tag">Xero</span>
-                <span class="tag">Scikit-Learn</span><span class="tag">Pandas</span>
-            </div>
-            """, unsafe_allow_html=True)
-        with col_b:
-            st.markdown("""
-            <div class="info-card">
-                <div style="color:#93C5FD;font-family:monospace;font-size:11px;margin-bottom:0.5rem;">// certifications</div>
-                <span class="tag">Google Data Analytics</span><span class="tag">Tableau BI Analyst</span>
-                <span class="tag">Microsoft SQL</span><span class="tag">Microsoft Excel</span>
-                <span class="tag">IBM Python</span><span class="tag">Xero Advisor</span>
-                <span class="tag">Brevet Pajak A&B</span>
-            </div>
-            """, unsafe_allow_html=True)
+    with col_b:
+        st.markdown("""
+        <div class="info-card">
+            <div style="color:#93C5FD;font-family:monospace;font-size:11px;margin-bottom:0.5rem;">// certifications</div>
+            <span class="tag">Google Data Analytics</span><span class="tag">Tableau BI Analyst</span>
+            <span class="tag">Microsoft SQL</span><span class="tag">Microsoft Excel</span>
+            <span class="tag">IBM Python</span><span class="tag">Xero Advisor</span>
+            <span class="tag">Brevet Pajak A&B</span>
+        </div>
+        """, unsafe_allow_html=True)
 
     st.markdown("---")
     st.markdown('<div class="section-box">💼 Work Experience</div>', unsafe_allow_html=True)
