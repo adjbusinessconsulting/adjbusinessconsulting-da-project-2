@@ -65,7 +65,6 @@ h1, h2, h3 { color: white; }
 """, unsafe_allow_html=True)
 
 # ── SIDEBAR ──
-# ── SIDEBAR ──
 with st.sidebar:
     st.markdown(f"""
     <div style="text-align:center; padding: 1rem 0 1.5rem;">
@@ -143,14 +142,7 @@ def dark_fig(fig):
 # SECTION: ABOUT ME
 # ════════════════════════════════════════════════
 if section == "👤 About Me":
-    col_img, col_bio = st.columns([1, 2.5])
-    with col_img:
-        st.markdown(f"""
-        <div style="text-align:center;padding-top:1rem;">
-            <img src="data:image/jpeg;base64,{PHOTO_B64}"
-                 style="width:220px;height:220px;border-radius:12px;object-fit:cover;object-position:top;border:3px solid #3B82F6;box-shadow:0 8px 32px rgba(59,130,246,0.2);"/>
-        </div>
-        """, unsafe_allow_html=True)
+   col_bio = st.columns([1, 2.5])
 
     with col_bio:
         st.markdown("# Anthony Djiady Djie")
