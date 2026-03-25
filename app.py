@@ -65,13 +65,15 @@ h1, h2, h3 { color: white; }
 """, unsafe_allow_html=True)
 
 # ── SIDEBAR ──
+# ── SIDEBAR ──
 with st.sidebar:
     st.markdown(f"""
     <div style="text-align:center; padding: 1rem 0 1.5rem;">
-        <img src="data:image/jpeg;base64,{PHOTO_B64}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;object-position:top;border:3px solid #3B82F6;box-shadow:0 4px 16px rgba(59,130,246,0.3);"/>
-        <div style="font-family:Oxanium,sans-serif;font-size:18px;font-weight:700;margin-top:0.75rem;color:white;">DA Project 2</div>
-        <div style="font-size:12px;color:#93C5FD;font-family:monospace;">Retail Inventory & Profitability</div>
-        <div style="font-size:11px;color:#64748B;margin-top:4px;">ADJ Business Consulting</div>
+        <img src="data:image/jpeg;base64,{PHOTO_B64}"
+             style="width:110px;height:110px;border-radius:50%;object-fit:cover;object-position:top;border:3px solid #3B82F6;"/>
+        <div style="font-family:Oxanium,sans-serif;font-size:18px;font-weight:700;margin-top:0.75rem;color:white;">Anthony Djiady Djie</div>
+        <div style="font-size:12px;color:#93C5FD;font-family:monospace;">Data Analyst & Tax Practitioner</div>
+        <div style="font-size:11px;color:#64748B;margin-top:4px;">Palu, Indonesia</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -141,25 +143,16 @@ def dark_fig(fig):
 # SECTION: ABOUT ME
 # ════════════════════════════════════════════════
 if section == "👤 About Me":
-    col_img, col_sq, col_txt = st.columns([1, 1.2, 2.5])
+    col_img, col_bio = st.columns([1, 2.5])
     with col_img:
         st.markdown(f"""
         <div style="text-align:center;padding-top:1rem;">
             <img src="data:image/jpeg;base64,{PHOTO_B64}"
-                 style="width:180px;height:180px;border-radius:50%;object-fit:cover;object-position:top;border:4px solid #3B82F6;box-shadow:0 8px 32px rgba(59,130,246,0.3);"/>
-            <div style="margin-top:1rem;color:white;font-family:Oxanium,sans-serif;font-size:17px;font-weight:800;">Anthony Djiady Djie</div>
-            <div style="color:#93C5FD;font-size:12px;font-weight:600;margin-top:0.3rem;">Data Analyst &amp; Tax Practitioner</div>
-            <div style="color:#64748B;font-size:11px;font-family:monospace;margin-top:0.3rem;">Palu, Indonesia</div>
+                 style="width:220px;height:220px;border-radius:12px;object-fit:cover;object-position:top;border:3px solid #3B82F6;box-shadow:0 8px 32px rgba(59,130,246,0.2);"/>
         </div>
         """, unsafe_allow_html=True)
-    with col_sq:
-        st.markdown(f"""
-        <div style="padding-top:0.5rem;">
-            <img src="data:image/jpeg;base64,{PHOTO_B64}"
-                 style="width:100%;border-radius:12px;object-fit:cover;object-position:top;border:3px solid #3B82F6;box-shadow:0 8px 32px rgba(59,130,246,0.2);"/>
-        </div>
-        """, unsafe_allow_html=True)
-    with col_txt:
+
+    with col_bio:
         st.markdown("# Anthony Djiady Djie")
         st.markdown('<div style="color:#93C5FD;font-family:monospace;font-size:13px;margin-bottom:1rem;">Data Analyst · Tax Practitioner · Data Scientist (in training) · Palu, Indonesia</div>', unsafe_allow_html=True)
         st.markdown("""
@@ -172,6 +165,7 @@ if section == "👤 About Me":
         with a career focus on analytics-driven finance, taxation, and business intelligence roles.
         </div>
         """, unsafe_allow_html=True)
+
         col_a, col_b = st.columns(2)
         with col_a:
             st.markdown("""
@@ -195,6 +189,7 @@ if section == "👤 About Me":
 
     st.markdown("---")
     st.markdown('<div class="section-box">💼 Work Experience</div>', unsafe_allow_html=True)
+
     experiences = [
         ("Data Analyst", "PT Agri Mentari Trust", "Jan 2025 – Aug 2025",
          "Developed financial dashboards and monthly performance reports. Analyzed sales performance and customer demand trends to support pricing strategy. Automated expense tracking using Excel."),
@@ -205,6 +200,7 @@ if section == "👤 About Me":
         ("Data Analyst / Branch Manager / Tax Practitioner", "Ayam Penyet Ria Palu", "Jan 2019 – Nov 2023",
          "Prepared monthly financial and operational reports. Analyzed sales margins and labor costs to improve cost efficiency. Reduced inventory losses by 20%+."),
     ]
+
     for title, company, period, desc in experiences:
         st.markdown(f"""
         <div class="info-card">
@@ -216,6 +212,33 @@ if section == "👤 About Me":
                 <div style="color:#64748B;font-size:12px;font-family:monospace;text-align:right;">{period}</div>
             </div>
             <div style="color:#94A3B8;font-size:13px;line-height:1.7;">{desc}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("---")
+    col_l, col_r = st.columns(2)
+    with col_l:
+        st.markdown("""
+        <div class="info-card">
+            <div style="color:#93C5FD;font-family:monospace;font-size:11px;margin-bottom:0.5rem;">// education</div>
+            <div style="color:white;font-weight:700;">Data Analyst / Data Scientist — Dibimbing.id</div>
+            <div style="color:#64748B;font-size:12px;">Sep 2025 – Present · DS39+</div>
+            <br>
+            <div style="color:white;font-weight:700;">B.S in Business Management — Biola University</div>
+            <div style="color:#64748B;font-size:12px;">2013 – 2016 · GPA 3.00/4.00</div>
+            <br>
+            <div style="color:white;font-weight:700;">High School Diploma — Greendale Secondary School Singapore</div>
+            <div style="color:#64748B;font-size:12px;">2008 – 2011</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with col_r:
+        st.markdown("""
+        <div class="info-card">
+            <div style="color:#93C5FD;font-family:monospace;font-size:11px;margin-bottom:0.5rem;">// languages</div>
+            <div style="margin-bottom:8px;"><span style="color:white;font-weight:600;">Indonesian</span> <span style="color:#64748B;">· Native</span></div>
+            <div style="margin-bottom:8px;"><span style="color:white;font-weight:600;">English</span> <span style="color:#64748B;">· C1 Advanced</span></div>
+            <div style="margin-bottom:8px;"><span style="color:white;font-weight:600;">Mandarin</span> <span style="color:#64748B;">· Conversational</span></div>
+            <div><span style="color:white;font-weight:600;">Malay</span> <span style="color:#64748B;">· Beginner</span></div>
         </div>
         """, unsafe_allow_html=True)
 
