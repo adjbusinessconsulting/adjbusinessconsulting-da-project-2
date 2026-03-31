@@ -586,66 +586,109 @@ elif section == "📈 6. Trends & Correlation":
     st.markdown('<div class="section-box">📈 Section 6 — Trends & Correlation</div>', unsafe_allow_html=True)
     if not data_loaded:
         st.error(f"Could not load data: {load_error}")
+    elif len(fsold) == 0:
+        st.warning("No sold items match the current filters. Adjust your filters in the sidebar.")
     else:
+        # ── Monthly Revenue & Items Sold ──
         st.markdown("#### Monthly Revenue & Items Sold Trend")
-        monthly = fsold.dropna(subset=['sold_month']).groupby('sold_month').agg(
-            revenue=('product_retail_price', 'sum'),
-            items_sold=('id', 'count'),
-            profit=('profit', 'sum')
-        ).reset_index().sort_values('sold_month')
+        monthly_data = fsold.dropna(subset=['sold_month']).copy()
+        monthly_data = monthly_data[monthly_data['sold_month'] != 'NaT']
 
-        fig = go.Figure()
-        fig.add_trace(go.Bar(x=monthly['sold_month'], y=monthly['revenue'], name='Revenue ($)',
-                             marker_color='#3B82F6', opacity=0.7))
-        fig.add_trace(go.Scatter(x=monthly['sold_month'], y=monthly['items_sold'], name='Items Sold',
-                                 yaxis='y2', line=dict(color='#FBBF24', width=3), mode='lines+markers'))
-        fig.update_layout(
-            yaxis=dict(title=dict(text='Revenue ($)', font=dict(color='#3B82F6'))),
-            yaxis2=dict(title=dict(text='Items Sold', font=dict(color='#FBBF24')), overlaying='y', side='right'),
-            xaxis=dict(tickangle=45),
-            legend=dict(x=0.01, y=0.99)
-        )
-        st.plotly_chart(dark_fig(fig, height=450), use_container_width=True)
+        if len(monthly_data) == 0:
+            st.info("No monthly data available for the current filters.")
+        else:
+            monthly = monthly_data.groupby('sold_month').agg(
+                revenue=('product_retail_price', 'sum'),
+                items_sold=('id', 'count'),
+                profit=('profit', 'sum')
+            ).reset_index().sort_values('sold_month')
 
-        if len(monthly) >= 2:
-            latest = monthly.iloc[-1]
-            prev = monthly.iloc[-2]
-            growth = (latest['revenue'] - prev['revenue']) / max(prev['revenue'], 1) * 100
-            direction = "📈" if growth > 0 else "📉"
-            insight_box(f"{direction} Latest month ({latest['sold_month']}): ${latest['revenue']:,.0f} revenue, "
-                        f"{int(latest['items_sold'])} items sold — {growth:+.1f}% vs previous month.")
+            fig = go.Figure()
+            fig.add_trace(go.Bar(
+                x=monthly['sold_month'], y=monthly['revenue'],
+                name='Revenue ($)', marker_color='#3B82F6', opacity=0.7
+            ))
+            fig.add_trace(go.Scatter(
+                x=monthly['sold_month'], y=monthly['items_sold'],
+                name='Items Sold', yaxis='y2',
+                line=dict(color='#FBBF24', width=3), mode='lines+markers'
+            ))
+            fig.update_layout(
+                yaxis=dict(title=dict(text='Revenue ($)', font=dict(color='#3B82F6'))),
+                yaxis2=dict(title=dict(text='Items Sold', font=dict(color='#FBBF24')),
+                            overlaying='y', side='right'),
+                xaxis=dict(tickangle=45),
+                legend=dict(x=0.01, y=0.99)
+            )
+            st.plotly_chart(dark_fig(fig, height=450), use_container_width=True)
 
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown("#### Monthly Profit Trend")
-            fig2 = px.area(monthly, x='sold_month', y='profit',
-                           color_discrete_sequence=['#34D399'],
-                           labels={'profit': 'Profit ($)', 'sold_month': 'Month'})
-            fig2.update_xaxes(tickangle=45)
-            st.plotly_chart(dark_fig(fig2), use_container_width=True)
+            if len(monthly) >= 2:
+                latest = monthly.iloc[-1]
+                prev = monthly.iloc[-2]
+                prev_rev = prev['revenue'] if prev['revenue'] > 0 else 1
+                growth = (latest['revenue'] - prev['revenue']) / prev_rev * 100
+                direction = "📈" if growth > 0 else "📉"
+                insight_box(
+                    f"{direction} Latest month ({latest['sold_month']}): "
+                    f"${latest['revenue']:,.0f} revenue, "
+                    f"{int(latest['items_sold'])} items sold — "
+                    f"{growth:+.1f}% vs previous month."
+                )
 
-        with col2:
-            st.markdown("#### Correlation Matrix")
-            corr_cols = ['cost', 'product_retail_price', 'profit', 'profit_margin']
-            corr_data = fsold[corr_cols].dropna()
-            if 'inventory_days' in fsold.columns:
-                corr_data = fsold[corr_cols + ['inventory_days']].dropna()
-            corr = corr_data.corr()
-            fig3 = px.imshow(corr, text_auto='.2f', color_continuous_scale='Blues',
-                             aspect='auto')
-            st.plotly_chart(dark_fig(fig3), use_container_width=True)
+            # ── Profit Trend & Correlation ──
+            col1, col2 = st.columns(2)
+            with col1:
+                st.markdown("#### Monthly Profit Trend")
+                fig2 = px.area(monthly, x='sold_month', y='profit',
+                               color_discrete_sequence=['#34D399'],
+                               labels={'profit': 'Profit ($)', 'sold_month': 'Month'})
+                fig2.update_xaxes(tickangle=45)
+                st.plotly_chart(dark_fig(fig2), use_container_width=True)
 
+            with col2:
+                st.markdown("#### Correlation Matrix")
+                corr_cols = ['cost', 'product_retail_price', 'profit',
+                             'profit_margin', 'inventory_days']
+                corr_data = fsold[corr_cols].dropna()
+                if len(corr_data) > 2:
+                    corr = corr_data.corr()
+                    fig3 = px.imshow(corr, text_auto='.2f',
+                                     color_continuous_scale='Blues', aspect='auto')
+                    st.plotly_chart(dark_fig(fig3), use_container_width=True)
+                else:
+                    st.info("Not enough data to compute correlations with current filters.")
+
+        # ── Slowest-Selling Products ──
         st.markdown("#### Top 20 Slowest-Selling Products")
-        if len(fsold) > 0:
-            slow = fsold.nlargest(20, 'inventory_days')[
-                ['product_name', 'product_brand', 'product_retail_price', 'profit', 'inventory_days']
-            ]
-            fig4 = px.bar(slow, x='inventory_days', y='product_name', orientation='h',
-                          color_discrete_sequence=['#F87171'], text_auto=True,
+        slow_data = fsold.dropna(subset=['inventory_days']).copy()
+        if len(slow_data) > 0:
+            slow_data['inv_days_int'] = slow_data['inventory_days'].astype(int)
+            slow = slow_data.nlargest(20, 'inv_days_int').copy().reset_index(drop=True)
+            # Unique labels: product name + brand to avoid duplicate y-axis entries
+            slow['label'] = (
+                slow['product_name'].str[:40]
+                + ' (' + slow['product_brand'].fillna('N/A').str[:15] + ')'
+            )
+            # Deduplicate any remaining identical labels
+            seen = {}
+            unique_labels = []
+            for lbl in slow['label']:
+                if lbl in seen:
+                    seen[lbl] += 1
+                    unique_labels.append(f"{lbl} #{seen[lbl]}")
+                else:
+                    seen[lbl] = 1
+                    unique_labels.append(lbl)
+            slow['label'] = unique_labels
+
+            fig4 = px.bar(slow, x='inv_days_int', y='label', orientation='h',
+                          color_discrete_sequence=['#F87171'],
                           hover_data=['product_brand', 'product_retail_price'],
-                          labels={'inventory_days': 'Days on Shelf'})
+                          labels={'inv_days_int': 'Days on Shelf', 'label': 'Product'})
             fig4.update_layout(yaxis=dict(autorange='reversed'))
-            st.plotly_chart(dark_fig(fig4, height=500), use_container_width=True)
+            st.plotly_chart(dark_fig(fig4, height=550), use_container_width=True)
+        else:
+            st.info("No inventory days data available for current filters.")
 
 
 # ════════════════════════════════════════════════
