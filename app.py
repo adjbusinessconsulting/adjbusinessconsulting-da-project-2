@@ -112,7 +112,7 @@ def insight_box(text):
 # ── DATA ──
 @st.cache_data
 def load_data():
-    df = pd.read_parquet("inventory_items_cleaned.parquet")
+    df = pd.read_parquet("inventory_items.parquet")
     df['created_at'] = pd.to_datetime(df['created_at'], format='mixed', utc=True)
     df['sold_at'] = pd.to_datetime(df['sold_at'], format='mixed', utc=True)
     df['is_sold'] = np.where(df['sold_at'].notna(), 1, 0)
