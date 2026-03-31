@@ -600,8 +600,8 @@ elif section == "📈 6. Trends & Correlation":
         fig.add_trace(go.Scatter(x=monthly['sold_month'], y=monthly['items_sold'], name='Items Sold',
                                  yaxis='y2', line=dict(color='#FBBF24', width=3), mode='lines+markers'))
         fig.update_layout(
-            yaxis=dict(title='Revenue ($)', titlefont_color='#3B82F6'),
-            yaxis2=dict(title='Items Sold', titlefont_color='#FBBF24', overlaying='y', side='right'),
+            yaxis=dict(title=dict(text='Revenue ($)', font=dict(color='#3B82F6'))),
+            yaxis2=dict(title=dict(text='Items Sold', font=dict(color='#FBBF24')), overlaying='y', side='right'),
             xaxis=dict(tickangle=45),
             legend=dict(x=0.01, y=0.99)
         )
