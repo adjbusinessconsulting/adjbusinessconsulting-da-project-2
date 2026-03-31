@@ -139,10 +139,11 @@ except Exception as e:
 
 # ── SIDEBAR ──
 with st.sidebar:
-     st.markdown(f"""
+    st.markdown("""
     <div style="text-align:center; padding: 1rem 0 1.5rem;">
-        <img src="data:image/jpeg;base64,{PHOTO_B64}"
-             style="width:110px;height:110px;border-radius:50%;object-fit:cover;object-position:top;border:3px solid #3B82F6;"/>
+        <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#60A5FA);
+                    display:inline-flex;align-items:center;justify-content:center;
+                    font-size:32px;font-weight:800;color:white;font-family:Oxanium;">AD</div>
         <div style="font-family:Oxanium,sans-serif;font-size:18px;font-weight:700;margin-top:0.75rem;color:white;">Anthony Djiady Djie</div>
         <div style="font-size:12px;color:#93C5FD;font-family:monospace;">Data Analyst & Tax Practitioner</div>
         <div style="font-size:11px;color:#64748B;margin-top:4px;">Palu, Indonesia</div>
