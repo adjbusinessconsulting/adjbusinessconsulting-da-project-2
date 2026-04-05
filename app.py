@@ -312,7 +312,7 @@ elif section == "📦 1. Project Overview":
     """, unsafe_allow_html=True)
 
     items = [
-        ("Records", "27,358 items", "#3B82F6"),
+        ("Records", "490,705 items", "#3B82F6"),
         ("Brands", "427 unique", "#34D399"),
         ("Time Span", "2019 – 2024", "#FBBF24"),
     ]
