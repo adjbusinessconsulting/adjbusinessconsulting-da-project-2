@@ -112,7 +112,7 @@ def insight_box(text):
 # ── DATA ──
 @st.cache_data
 def load_data():
-    df = pd.read_parquet("inventory_items.parquet")
+    df = pd.read_parquet("inventory_items_cleaned.parquet")
     df['created_at'] = pd.to_datetime(df['created_at'], format='mixed', utc=True)
     df['sold_at'] = pd.to_datetime(df['sold_at'], format='mixed', utc=True)
     df['is_sold'] = np.where(df['sold_at'].notna(), 1, 0)
@@ -312,7 +312,7 @@ elif section == "📦 1. Project Overview":
     """, unsafe_allow_html=True)
 
     items = [
-        ("Records", "490,705 items", "#3B82F6"),
+        ("Records", "27,358 items", "#3B82F6"),
         ("Brands", "427 unique", "#34D399"),
         ("Time Span", "2019 – 2024", "#FBBF24"),
     ]
@@ -578,6 +578,61 @@ elif section == "🏆 5. Performance Analysis":
         fig5.update_traces(textposition='outside')
         fig5.update_layout(yaxis=dict(autorange='reversed'))
         st.plotly_chart(dark_fig(fig5, height=450), use_container_width=True)
+
+        st.markdown("---")
+        st.markdown("#### Revenue by Category")
+        cat_perf = fsold.groupby('product_category').agg(
+            revenue=('product_retail_price', 'sum'),
+            profit=('profit', 'sum'),
+            items_sold=('id', 'count'),
+            avg_margin=('profit_margin', 'mean')
+        ).sort_values('revenue', ascending=False).reset_index()
+        fig6 = px.bar(cat_perf, x='revenue', y='product_category', orientation='h',
+                      color='revenue', color_continuous_scale='Blues',
+                      text_auto='$.2s',
+                      labels={'product_category': 'Category', 'revenue': 'Revenue ($)'},
+                      hover_data=['items_sold', 'profit', 'avg_margin'])
+        fig6.update_traces(textposition='outside')
+        fig6.update_layout(yaxis=dict(autorange='reversed'), coloraxis_showscale=False)
+        st.plotly_chart(dark_fig(fig6, height=700), use_container_width=True)
+
+        col5, col6 = st.columns(2)
+        with col5:
+            st.markdown("#### Category Sell-Through Rate")
+            cat_all = fdf.groupby('product_category').agg(
+                total=('id', 'count'),
+                sold=('is_sold', 'sum')
+            ).reset_index()
+            cat_all['sell_through'] = cat_all['sold'] / cat_all['total']
+            cat_all = cat_all.sort_values('sell_through', ascending=False)
+            fig7 = px.bar(cat_all, x='sell_through', y='product_category', orientation='h',
+                          color='sell_through', color_continuous_scale='Greens',
+                          text_auto='.1%',
+                          labels={'product_category': 'Category', 'sell_through': 'Sell-Through Rate'})
+            fig7.update_traces(textposition='outside')
+            fig7.update_layout(yaxis=dict(autorange='reversed'), coloraxis_showscale=False,
+                               xaxis=dict(tickformat='.0%'))
+            st.plotly_chart(dark_fig(fig7, height=600), use_container_width=True)
+
+        with col6:
+            st.markdown("#### Avg Days to Sell by Category")
+            cat_speed = fsold.dropna(subset=['inventory_days']).groupby('product_category').agg(
+                avg_days=('inventory_days', 'mean'),
+                items=('id', 'count')
+            ).reset_index().sort_values('avg_days')
+            fig8 = px.bar(cat_speed, x='avg_days', y='product_category', orientation='h',
+                          color='avg_days', color_continuous_scale='RdYlGn_r',
+                          text_auto='.1f',
+                          labels={'product_category': 'Category', 'avg_days': 'Avg Days to Sell'})
+            fig8.update_traces(textposition='outside')
+            fig8.update_layout(yaxis=dict(autorange='reversed'), coloraxis_showscale=False)
+            st.plotly_chart(dark_fig(fig8, height=600), use_container_width=True)
+
+        top_cat = cat_perf.iloc[0]
+        top3_cat_rev = cat_perf.head(3)['revenue'].sum()
+        realized_rev = fsold['product_retail_price'].sum()
+        insight_box(f"'{top_cat['product_category']}' is the top revenue category at ${top_cat['revenue']:,.0f}. "
+                    f"Top 3 categories contribute ${top3_cat_rev:,.0f} ({top3_cat_rev/max(realized_rev,1)*100:.0f}% of total revenue).")
 
 
 # ════════════════════════════════════════════════
